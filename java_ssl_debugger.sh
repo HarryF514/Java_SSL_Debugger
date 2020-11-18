@@ -2,24 +2,25 @@
 
 helpFunction() {
     echo ""
-    echo "Usage: $0 -h hostname -p port -c parameterC"
+    echo "Usage: $0 -h hostname -p port -k keyStorePath"
     echo -e "\t-h Description of what is hostname"
     echo -e "\t-p Description of what is port"
-    echo -e "\t-c Description of what is parameterC"
+    echo -e "\t-k Description of what is keyStorePath"
     exit 1 # Exit script after printing help
 }
 
-while getopts "h:p:c:" opt; do
+while getopts "h:p:k:" opt; do
     case "$opt" in
     h) hostname="$OPTARG" ;;
     p) port="$OPTARG" ;;
-    c) parameterC="$OPTARG" ;;
+    k) keyStorePath="$OPTARG" ;;
     ?) helpFunction ;; # Print helpFunction in case parameter is non-existent
     esac
 done
 
 echo "hostname $hostname"
 echo "port $port"
+echo "keyStorePath $keyStorePath"
 
 if which java >/dev/null; then
     echo "java exist"
@@ -77,4 +78,13 @@ if [ -z "$port" ]; then
     read port
 fi
 
-java -Djavax.net.debug=ssl,handshake -Djava.security.debug=access:stack SSLPoke $hostname $port
+# echo "Please keystore path"
+# read keystore
+
+# echo "Please truststore path"
+# read truststore
+if [ "$keyStorePath" ]; then
+    keyV="-Djavax.net.ssl.keyStore=$keyStorePath"
+fi
+
+java -Djavax.net.ssl.keyStore=$keyStorePath -Djavax.net.debug=ssl,handshake -Djava.security.debug=access:stack SSLPoke $hostname $port

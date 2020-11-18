@@ -1,6 +1,6 @@
 # Java_SSL_Debugger
 
-## Headers
+## Userage
 ```
 ./java_ssl_debugger.sh
 

@@ -4,6 +4,10 @@
 ```
 ./java_ssl_debugger.sh
 
+or
+
+./java_ssl_debugger.sh -h "google.com" -p "443"
+
 ```
 
 ## Concepts

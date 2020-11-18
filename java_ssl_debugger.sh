@@ -1,5 +1,26 @@
 #!/bin/bash
 
+helpFunction() {
+    echo ""
+    echo "Usage: $0 -h hostname -p port -c parameterC"
+    echo -e "\t-h Description of what is hostname"
+    echo -e "\t-p Description of what is port"
+    echo -e "\t-c Description of what is parameterC"
+    exit 1 # Exit script after printing help
+}
+
+while getopts "h:p:c:" opt; do
+    case "$opt" in
+    h) hostname="$OPTARG" ;;
+    p) port="$OPTARG" ;;
+    c) parameterC="$OPTARG" ;;
+    ?) helpFunction ;; # Print helpFunction in case parameter is non-existent
+    esac
+done
+
+echo "hostname $hostname"
+echo "port $port"
+
 if which java >/dev/null; then
     echo "java exist"
 else
@@ -46,12 +67,14 @@ public class SSLPoke {
 
 javac SSLPoke.java
 
-echo "Please enter hostname, for example, google.com"
-read hostname
+if [ -z "$hostname" ]; then
+    echo "Please enter hostname, for example, google.com"
+    read hostname
+fi
 
-echo "Please enter port, for example, 443"
-read port
-
-
+if [ -z "$port" ]; then
+    echo "Please enter port, for example, 443"
+    read port
+fi
 
 java -Djavax.net.debug=ssl,handshake -Djava.security.debug=access:stack SSLPoke $hostname $port
